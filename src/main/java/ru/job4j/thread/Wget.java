@@ -9,27 +9,33 @@ import java.util.concurrent.TimeUnit;
 public class Wget implements Runnable {
     private final String url;
     private final int speed;
+    private String outPutFileName;
 
-    public Wget(String url, int speed) {
+    public Wget(String url, int speed, String outPutFileName) {
         this.url = url;
         this.speed = speed;
+        this.outPutFileName = outPutFileName;
     }
 
     @Override
     public void run() {
         try (BufferedInputStream in = new BufferedInputStream(new URL(this.url).openStream());
-             FileOutputStream fileOutputStream = new FileOutputStream("pom_tmp.xml")) {
+             FileOutputStream fileOutputStream = new FileOutputStream(this.outPutFileName)) {
             byte[] dataBuffer = new byte[1024];
             int bytesRead;
-            long startTime = System.nanoTime();
+            int downloadData = 0;
+            long startTime = System.currentTimeMillis();
             while ((bytesRead = in.read(dataBuffer, 0, 1024)) != -1) {
                 fileOutputStream.write(dataBuffer, 0, bytesRead);
-                long elapsedInSeconds =
-                        TimeUnit.NANOSECONDS.toSeconds(System.nanoTime() - startTime);
-                if (elapsedInSeconds < speed) {
-                    Thread.sleep(1000 * speed - elapsedInSeconds);
+                downloadData += bytesRead;
+                if (downloadData >= speed) {
+                    long elapsed = System.currentTimeMillis() - startTime;
+                    if (elapsed < 1000) {
+                        Thread.sleep((1000 - elapsed));
+                        downloadData = 0;
+                        startTime = System.currentTimeMillis();
+                    }
                 }
-                startTime = System.nanoTime();
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -48,7 +54,12 @@ public class Wget implements Runnable {
         }
         String url = args[0];
         int speed = Integer.parseInt(args[1]);
-        Thread wget = new Thread(new Wget(url, speed));
+        String outPutFileName = "outputFile";
+        int lastIndex = url.lastIndexOf('/');
+        if (lastIndex != -1) {
+            outPutFileName = url.substring(lastIndex + 1);
+        }
+        Thread wget = new Thread(new Wget(url, speed, outPutFileName));
         wget.start();
         wget.join();
     }
