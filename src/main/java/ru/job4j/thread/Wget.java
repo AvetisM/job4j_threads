@@ -4,7 +4,6 @@ import java.io.BufferedInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
-import java.util.concurrent.TimeUnit;
 
 public class Wget implements Runnable {
     private final String url;
@@ -32,9 +31,9 @@ public class Wget implements Runnable {
                     long elapsed = System.currentTimeMillis() - startTime;
                     if (elapsed < 1000) {
                         Thread.sleep((1000 - elapsed));
-                        downloadData = 0;
-                        startTime = System.currentTimeMillis();
                     }
+                    downloadData = 0;
+                    startTime = System.currentTimeMillis();
                 }
             }
         } catch (IOException e) {
