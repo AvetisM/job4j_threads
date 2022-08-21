@@ -18,11 +18,11 @@ public class AccountStorage {
     }
 
     public synchronized boolean update(Account account) {
-        return accounts.replace(account.id(), account) == null;
+        return accounts.replace(account.id(), account) != null;
     }
 
     public synchronized boolean delete(int id) {
-        return accounts.remove(id) == null;
+        return accounts.remove(id) != null;
     }
 
     public synchronized Optional<Account> getById(int id) {
@@ -36,8 +36,8 @@ public class AccountStorage {
         if (fromAccount.isPresent()
                 && toAccount.isPresent()
                 && fromAccount.get().amount() >= amount) {
-            fromAccount.get().setAmount(fromAccount.get().amount() - amount);
-            toAccount.get().setAmount(toAccount.get().amount() + amount);
+            update(new Account(fromId, fromAccount.get().amount() - amount));
+            update(new Account(toId, toAccount.get().amount() + amount));
             rls = true;
         }
         return rls;
