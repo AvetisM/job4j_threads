@@ -36,10 +36,13 @@ public class CountBarrier {
     }
 
     public static void main(String[] args) {
-        CountBarrier countBarrier = new CountBarrier(10);
+        int total = 10;
+        CountBarrier countBarrier = new CountBarrier(total);
         Thread master = new Thread(
                 () -> {
-                    countBarrier.count();
+                    for (int i = 0; i < total; i++) {
+                        countBarrier.count();
+                    }
                     System.out.println(Thread.currentThread().getName() + " started");
                 }, "Master");
 
