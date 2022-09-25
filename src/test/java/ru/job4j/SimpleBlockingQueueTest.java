@@ -2,19 +2,28 @@ package ru.job4j;
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertTrue;
-
 class SimpleBlockingQueueTest {
 
     @Test
     public void simpleBlockingQueueSize10() throws InterruptedException {
         SimpleBlockingQueue simpleBlock = new SimpleBlockingQueue<>(10);
-        Thread first = new Thread(() -> simpleBlock.offer(Math.random()));
-        Thread second = new Thread(() -> simpleBlock.poll());
-        first.start();
-        second.start();
-        first.join();
-        second.join();
-        assertTrue(!simpleBlock.iterator().hasNext());
+        Thread producer = new Thread(() -> {
+            try {
+                simpleBlock.offer(Math.random());
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        });
+        Thread consumer = new Thread(() -> {
+            try {
+                simpleBlock.poll();
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        });
+        producer.start();
+        consumer.start();
+        producer.join();
+        consumer.join();
     }
 }

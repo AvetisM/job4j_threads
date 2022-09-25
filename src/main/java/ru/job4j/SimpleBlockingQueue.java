@@ -6,7 +6,7 @@ import net.jcip.annotations.ThreadSafe;
 import java.util.*;
 
 @ThreadSafe
-public class SimpleBlockingQueue<T> implements Iterable<T> {
+public class SimpleBlockingQueue<T> {
 
     private final Object monitor = this;
     private int size;
@@ -18,40 +18,23 @@ public class SimpleBlockingQueue<T> implements Iterable<T> {
         this.size = size;
     }
 
-    @Override
-    public synchronized Iterator<T> iterator() {
-       return copy(queue).iterator();
-    }
-
-    List<T> copy(Queue<T> queue) {
-        return new LinkedList<>(queue);
-    }
-
-    public void offer(T value) {
+    public void offer(T value) throws InterruptedException {
         synchronized (monitor) {
-            try {
                 while (queue.size() == size) {
                     monitor.wait();
                 }
                 queue.offer(value);
                 monitor.notifyAll();
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-            }
         }
     }
 
-    public T poll() {
-        T rls = null;
+    public T poll() throws InterruptedException {
+        T rls;
         synchronized (monitor) {
-            try {
                 while (queue.isEmpty()) {
                     monitor.wait();
                 }
                 rls = queue.poll();
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-            }
         }
         return rls;
     }
