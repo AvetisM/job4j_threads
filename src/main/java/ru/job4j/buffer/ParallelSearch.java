@@ -29,14 +29,13 @@ public class ParallelSearch {
                             Thread.currentThread().interrupt();
                         }
                     }
+                    try {
+                        Thread.sleep(500 * count);
+                        consumer.interrupt();
+                    } catch (InterruptedException e) {
+                        Thread.currentThread().interrupt();
+                    }
                 }
         ).start();
-
-        try {
-            Thread.sleep(500 * count);
-            consumer.interrupt();
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-        }
     }
 }
