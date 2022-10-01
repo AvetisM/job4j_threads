@@ -35,4 +35,8 @@ public class SimpleBlockingQueue<T> {
         monitor.notifyAll();
         return rls;
     }
+
+    public boolean isEmpty() {
+        return queue.isEmpty();
+    }
 }
