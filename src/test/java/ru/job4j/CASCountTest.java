@@ -10,7 +10,7 @@ public class CASCountTest {
     @Test
     public void whenIncrement3times() {
 
-        CASCount casCount = new CASCount();
+        CASCount casCount = new CASCount(0);
         casCount.increment();
         assertThat(casCount.get(), is(1));
         casCount.increment();
@@ -20,4 +20,25 @@ public class CASCountTest {
 
     }
 
+    @Test
+    public void whenInitialValueNotZero() {
+        CASCount casCount = new CASCount(2);
+        casCount.increment();
+        casCount.increment();
+        casCount.increment();
+        casCount.increment();
+        casCount.increment();
+        assertThat(casCount.get(), is(7));
+    }
+
+    @Test
+    public void whenInitialValueLessThanZero() {
+        CASCount casCount = new CASCount(-1);
+        casCount.increment();
+        casCount.increment();
+        casCount.increment();
+        casCount.increment();
+        casCount.increment();
+        assertThat(casCount.get(), is(4));
+    }
 }
