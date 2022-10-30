@@ -16,7 +16,7 @@ public class Cache {
             throw new OptimisticException("Versions are not equal");
         }
         Base newModel = new Base(model.getId(), model.getVersion() + 1, model.getName());
-        return memory.computeIfPresent(model.getId(), (K, V) -> newModel) != null;
+        return memory.computeIfPresent(model.getId(), (key, value) -> newModel) != null;
     }
 
     public void delete(Base model) {
