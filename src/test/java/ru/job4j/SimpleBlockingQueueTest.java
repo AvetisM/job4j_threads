@@ -7,7 +7,6 @@ import java.util.Arrays;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.*;
 
 class SimpleBlockingQueueTest {
     @Test
