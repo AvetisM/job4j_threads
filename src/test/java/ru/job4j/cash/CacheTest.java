@@ -4,14 +4,12 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 class CacheTest {
-
     @Test
     public void whenAdd() {
         Cache cache = new Cache();
         Assertions.assertTrue(cache.add(new Base(1, 1, "First")));
         Assertions.assertFalse(cache.add(new Base(1, 1, "First")));
     }
-
     @Test
     public void whenDelete() {
         Cache cache = new Cache();
@@ -20,7 +18,6 @@ class CacheTest {
         cache.delete(model);
         Assertions.assertTrue(cache.add(model));
     }
-
     @Test
     public void whenUpdate() {
         Cache cache = new Cache();
