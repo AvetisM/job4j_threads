@@ -11,18 +11,16 @@ public class ThreadPool {
     private final SimpleBlockingQueue<Runnable> tasks = new SimpleBlockingQueue<>(size);
 
     public ThreadPool() {
-        init();
+        for (int i = 0; i < size; i++) {
+            threads.add(new Thread((Runnable) tasks));
+        }
     }
 
     public void work(Runnable job) throws InterruptedException {
-
+        tasks.offer(job);
     }
 
     public void shutdown() {
         threads.forEach(Thread::interrupt);
-    }
-
-    private void init() {
-
     }
 }
