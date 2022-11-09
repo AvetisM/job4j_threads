@@ -16,12 +16,14 @@ public class ThreadPool {
                         try {
                             while (!Thread.currentThread().isInterrupted()) {
                                 tasks.poll().run();
+                                System.out.println(Thread.currentThread().getName());
                             }
                         } catch (InterruptedException e) {
                             Thread.currentThread().interrupt();
                         }
                     }
             );
+            thread.start();
             threads.add(thread);
         }
     }
@@ -36,11 +38,10 @@ public class ThreadPool {
 
     public static void main(String[] args) throws InterruptedException {
         ThreadPool threadPool = new ThreadPool();
-        Runnable task = () -> System.out.println("Задача выполнена");
-        for (int i = 0; i < 4; i++) {
+        Runnable task = () -> System.out.println("Задача выполнена потоком");
+        for (int i = 0; i < 8; i++) {
             threadPool.work(task);
         }
-        threadPool.threads.forEach(Thread::start);
         threadPool.shutdown();
     }
 }
