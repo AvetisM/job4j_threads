@@ -16,7 +16,6 @@ public class ThreadPool {
                         try {
                             while (!Thread.currentThread().isInterrupted()) {
                                 tasks.poll().run();
-                                System.out.println(Thread.currentThread().getName());
                             }
                         } catch (InterruptedException e) {
                             Thread.currentThread().interrupt();
@@ -38,7 +37,7 @@ public class ThreadPool {
 
     public static void main(String[] args) throws InterruptedException {
         ThreadPool threadPool = new ThreadPool();
-        Runnable task = () -> System.out.println("Задача выполнена потоком");
+        Runnable task = () -> System.out.println("Задача выполнена потоком " + Thread.currentThread().getName());
         for (int i = 0; i < 8; i++) {
             threadPool.work(task);
         }
