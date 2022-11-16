@@ -1,16 +1,15 @@
 package ru.job4j.pool;
 
-import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.RecursiveTask;
 
-public class IndexParallelSearch extends RecursiveTask<Integer> {
+public class IndexParallelSearch<T> extends RecursiveTask<Integer> {
 
-    private final Object[] array;
+    private final T[] array;
     private final int from;
     private final int to;
-    private final Object value;
+    private final T value;
 
-    public IndexParallelSearch(Object[] array, int from, int to, Object value) {
+    public IndexParallelSearch(T[] array, int from, int to, T value) {
         this.array = array;
         this.from = from;
         this.to = to;
@@ -20,18 +19,13 @@ public class IndexParallelSearch extends RecursiveTask<Integer> {
     @Override
     protected Integer compute() {
         if (to - from < 10) {
-            return IndexSearch.getIndex(array, from, to, value);
+            return new IndexSearch().getIndex(array, from, to, value);
         }
         int mid =  (from + to) / 2;
         IndexParallelSearch firstSearch = new IndexParallelSearch(array, from, mid, value);
         IndexParallelSearch secondSearch = new IndexParallelSearch(array, mid + 1, to, value);
         firstSearch.fork();
         secondSearch.fork();
-        return firstSearch.join() == -1 ? secondSearch.join() : firstSearch.join();
-    }
-
-    public static int search(Object[] array, Object value) {
-        ForkJoinPool forkJoinPool = new ForkJoinPool();
-        return forkJoinPool.invoke(new IndexParallelSearch(array, 0, array.length - 1, value));
+        return Math.max((Integer) firstSearch.join(), (Integer) secondSearch.join());
     }
 }
