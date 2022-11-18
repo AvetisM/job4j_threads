@@ -82,7 +82,7 @@ public class AsyncExample {
 
     public static void thenComposeExample() throws Exception {
         CompletableFuture<String> result = goToTrash().thenCompose(a -> buyProduct("Milk"));
-        System.out.println("Куплено: " + result.get()); // wait calculations;
+        System.out.println("Куплено: " + result.get());
     }
 
     public static void thenCombineExample() throws Exception {
