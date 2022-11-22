@@ -133,11 +133,6 @@ public class AsyncExample {
     }
 
     public static void main(String[] args) throws Exception {
-        runAsyncExample();
-        thenRunExample();
-        thenAcceptExample();
-        thenApplyExample();
-        thenComposeExample();
         thenCombineExample();
         allOfExample();
         anyOfExample();
