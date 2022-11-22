@@ -11,10 +11,7 @@ public class RolColSum {
         int n = matrix.length;
         Sums[] sums = new Sums[n];
         for (int k = 0; k < n; k++) {
-            Sums sum = new Sums(0, 0);
-            sum.rowSum += getRowSum(matrix, k);
-            sum.colSum += getColSum(matrix, k);
-            sums[k] = sum;
+            sums[k] = getSum(matrix, k);
         }
         return sums;
     }
@@ -32,29 +29,17 @@ public class RolColSum {
         return sums;
     }
 
-    public static int getColSum(int[][] matrix, int rowIndex) {
-        int rls = 0;
-        for (int i = 0; i < matrix[rowIndex].length; i++) {
-            rls += matrix[i][rowIndex];
+    public static Sums getSum(int[][] matrix, int index) {
+        Sums sum = new Sums(0, 0);
+        for (int i = 0; i < matrix[index].length; i++) {
+            sum.colSum += matrix[i][index];
+            sum.rowSum +=  matrix[index][i];
         }
-        return rls;
-    }
-
-    public static int getRowSum(int[][] matrix, int colIndex) {
-        int rls = 0;
-        for (int j = 0; j < matrix[colIndex].length; j++) {
-            rls += matrix[colIndex][j];
-        }
-        return rls;
+        return sum;
     }
 
     public static CompletableFuture<Sums> calculateRowCol(int[][] matrix, int index) {
-        return CompletableFuture.supplyAsync(() -> {
-                    Sums sums = new Sums(0, 0);
-                    sums.colSum = getColSum(matrix, index);
-                    sums.rowSum = getRowSum(matrix, index);
-                    return sums;
-                }
+        return CompletableFuture.supplyAsync(() -> getSum(matrix, index)
         );
     }
 }
